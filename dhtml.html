@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.S.M Online Exam Practice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/d2c.css">
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-100 to-slate-200">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 border border-slate-200">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <i data-lucide="graduation-cap" class="w-10 h-10 text-white"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-slate-900 mb-2">&star; D.S.M Students Exam Practice Platform &star;</h1>
+                <p class="text-slate-600"><b>Practice practice to avoid stress!</b></p>
+                <p> <b> GOOD LUCK</b></p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700">Select Subject</label>
+                        <select id="subjectSelect" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all">
+                            <option value="english">English (10 questions)</option>
+                            <option value="mathematics">Mathematics (10 questions)</option>
+                            <option value="physics">Physics (10 questions)</option>
+                            <option value="chemistry" selected>Chemistry (30 questions)</option>
+                            <option value="geography">Geography (10 questions)</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700">Number of Questions</label>
+                        <select id="questionCount" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all">
+                            <option value="10">10 Questions</option>
+                            <option value="20">20 Questions</option>
+                            <option value="30" selected>30 Questions</option>
+                            <option value="0">All Questions (Max: 30)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-circle" class="w-5 h-5 text-amber-600 mt-0.5"></i>
+                        <div class="text-sm text-amber-800">
+                            <p class="font-semibold mb-1">Exam Rules:</p>
+                            <ul class="list-disc list-inside space-y-1 text-amber-700">
+                                <li>The time is limited (2 minutes per question)</li>
+                                <li>You can mark questions for review</li>
+                                <li>Use the question palette to navigate</li>
+                                <li>Submit only when finished</li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="app.startExam()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                    <i data-lucide="play-circle" class="w-5 h-5"></i>
+                    Start Exam 
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exam Interface -->
+    <div id="examScreen" class="hidden min-h-screen flex flex-col bg-slate-100">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-600 p-2 rounded-lg">
+                        <i data-lucide="file-text" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div>
+                        <h2 id="examSubject" class="font-bold text-slate-900 leading-tight">Subject Name</h2>
+                        <p class="text-xs text-slate-500">Ethiopian National Exam</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6">
+                    <div id="timer" class="flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-lg border border-slate-200 font-mono text-lg font-bold text-slate-700">
+                        <i data-lucide="clock" class="w-5 h-5 text-slate-500"></i>
+                        <span id="timeDisplay">00:00:00</span>
+                    </div>
+                    
+                    <button onclick="app.submitExam()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center gap-2">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i>
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col lg:flex-row max-w-7xl mx-auto w-full p-4 gap-4">
+            <!-- Question Area -->
+            <main class="flex-1 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col min-h-[600px]">
+                <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                    <span id="questionNumber" class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Question 1 of <span id="totalQuestions">30</span></span>
+                    
+                </div>
+
+                <div class="flex-1 p-6 lg:p-8 overflow-y-auto">
+                    <div id="questionText" class="text-lg lg:text-xl font-medium text-slate-900 mb-8 leading-relaxed">
+                        Loading question...
+                    </div>
+
+                    <div id="optionsContainer" class="space-y-3">
+                        <!-- Options will be inserted here -->
+                    </div>
+
+                    <div class="mt-8 flex items-center gap-2">
+                        <input type="checkbox" id="markReview" class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500 cursor-pointer" onchange="app.toggleMarkCurrent()">
+                        <label for="markReview" class="text-sm font-medium text-slate-700 cursor-pointer select-none flex items-center gap-2">
+                            <i data-lucide="flag" class="w-4 h-4 text-amber-500"></i>
+                            Mark for review
+                        </label>
+                    </div>
+                </div>
+
+                <div class="p-6 border-t border-slate-100 bg-slate-50 rounded-b-xl flex items-center justify-between">
+                    <button onclick="app.previousQuestion()" class="flex items-center gap-2 px-6 py-3 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 text-slate-700 font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed" id="prevBtn">
+                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                        Previous
+                    </button>
+                    
+                    <button onclick="app.nextQuestion()" class="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all shadow-sm hover:shadow-md" id="nextBtn">
+                        Next
+                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </main>
+
+            <!-- Sidebar Palette -->
+            <aside class="lg:w-80 flex flex-col gap-4">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+                    <h3 class="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                        <i data-lucide="layout-grid" class="w-5 h-5 text-indigo-600"></i>
+                        Question Palette
+                    </h3>
+                    
+                    <!-- Added scrollable container for palette -->
+                    <div class="palette-container max-h-[300px] overflow-y-auto pr-1">
+                        <div id="questionPalette" class="grid grid-cols-6 gap-2">
+                            <!-- Question numbers will be inserted here -->
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-2 gap-2 text-xs">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded bg-emerald-500"></div>
+                            <span class="text-slate-600">Answered</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded bg-amber-400"></div>
+                            <span class="text-slate-600">Marked</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded bg-red-500"></div>
+                            <span class="text-slate-600">Not Answered</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded border-2 border-slate-300 bg-white"></div>
+                            <span class="text-slate-600">Not Visited</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+                    <h3 class="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                        <i data-lucide="pie-chart" class="w-5 h-5 text-indigo-600"></i>
+                        Progress
+                    </h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-600">Completed</span>
+                            <span id="progressText" class="font-semibold text-slate-900">0/<span id="totalQuestionsProgress">30</span></span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-2">
+                            <div id="progressBar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="hidden min-h-screen bg-slate-50 p-4 lg:p-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                <div class="bg-indigo-600 p-8 text-white text-center">
+                    <h2 class="text-3xl font-bold mb-2">Exam Completed!</h2>
+                    <p class="text-indigo-100">Here is your performance summary</p>
+                </div>
+
+                <div class="p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-slate-50 rounded-xl p-6 text-center border border-slate-200">
+                            <div class="text-3xl font-bold text-indigo-600 mb-1" id="scorePercentage">0%</div>
+                            <div class="text-sm text-slate-600 font-medium">Score</div>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-6 text-center border border-slate-200">
+                            <div class="text-3xl font-bold text-emerald-600 mb-1" id="correctCount">0</div>
+                            <div class="text-sm text-slate-600 font-medium">Correct Answers</div>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-6 text-center border border-slate-200">
+                            <div class="text-3xl font-bold text-slate-700 mb-1" id="timeTaken">00:00</div>
+                            <div class="text-sm text-slate-600 font-medium">Time Taken</div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 max-h-[500px] overflow-y-auto pr-2" id="resultsDetails">
+                        <!-- Detailed results will be inserted here -->
+                    </div>
+
+                    <div class="mt-8 flex gap-4 justify-center">
+                        <button onclick="location.reload()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-colors flex items-center gap-2">
+                            <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                            New Exam
+                        </button>
+                        <button onclick="app.reviewExam()" class="px-6 py-3 bg-white border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 rounded-lg font-semibold transition-colors flex items-center gap-2">
+                            <i data-lucide="eye" class="w-5 h-5"></i>
+                            Review Answers
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <script src="js/3j.js"></script> <!-- Your questions.js file -->
+    <script src="js/4j.js"></script> <!-- Your app.js file -->
+    <script>
+        lucide.createIcons();
+        
+        // Update total questions display based on selection
+        document.getElementById('subjectSelect').addEventListener('change', function() {
+            const subject = this.value;
+            const questionCounts = {
+                'english': 10,
+                'mathematics': 10,
+                'physics': 10,
+                'chemistry': 30,
+                'biology': 10
+            };
+            const maxQuestions = questionCounts[subject];
+            const countSelect = document.getElementById('questionCount');
+            
+            // Update available options based on subject
+            Array.from(countSelect.options).forEach(option => {
+                const val = parseInt(option.value);
+                if (val > 0 && val > maxQuestions) {
+                    option.disabled = true;
+                    option.textContent = `${val} Questions (Max ${maxQuestions})`;
+                } else if (val > 0) {
+                    option.disabled = false;
+                    option.textContent = `${val} Questions`;
+                }
+            });
+            
+            // If selected value is now invalid, set to max
+            if (parseInt(countSelect.value) > maxQuestions) {
+                countSelect.value = maxQuestions;
+            }
+        });
+        
+        // Trigger on load
+        window.addEventListener('load', function() {
+            document.getElementById('subjectSelect').dispatchEvent(new Event('change'));
+        });
+    </script>
+</body>
+</html>

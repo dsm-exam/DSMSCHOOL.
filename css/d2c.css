@@ -1,0 +1,299 @@
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Smooth transitions */
+.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+}
+
+/* Question palette buttons */
+.palette-btn {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.palette-btn:hover {
+    transform: scale(1.05);
+}
+
+.palette-btn.current {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    transform: scale(1.1);
+}
+
+.palette-btn.answered {
+    background-color: #10b981;
+    color: white;
+}
+
+.palette-btn.marked {
+    background-color: #fbbf24;
+    color: white;
+    position: relative;
+}
+
+/* Add a small indicator for marked+answered combination */
+.palette-btn.marked.answered {
+    background: linear-gradient(135deg, #10b981 50%, #fbbf24 50%);
+}
+
+.palette-btn.not-answered {
+    background-color: #ef4444;
+    color: white;
+}
+
+.palette-btn.not-visited {
+    background-color: white;
+    color: #64748b;
+    border-color: #cbd5e1;
+}
+
+/* Improved grid layout for question palette - better handling of 30 questions */
+#questionPalette {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* 6x5 grid for 30 questions */
+    gap: 0.5rem;
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    background-color: #f8fafc;
+}
+
+/* Make palette container scrollable if needed */
+.palette-container {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+@media (max-width: 1024px) {
+    #questionPalette {
+        grid-template-columns: repeat(5, 1fr); /* 5x6 grid on medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    #questionPalette {
+        grid-template-columns: repeat(4, 1fr); /* 4x8 grid on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    #questionPalette {
+        grid-template-columns: repeat(3, 1fr); /* 3x10 grid on mobile */
+    }
+}
+
+/* Option buttons */
+.option-btn {
+    width: 100%;
+    text-align: left;
+    padding: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.75rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: white;
+}
+
+.option-btn:hover {
+    border-color: #6366f1;
+    background-color: #eef2ff;
+}
+
+.option-btn.selected {
+    border-color: #4f46e5;
+    background-color: #e0e7ff;
+    color: #312e81;
+}
+
+.option-btn.correct {
+    border-color: #10b981;
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.option-btn.wrong {
+    border-color: #ef4444;
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.option-label {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f1f5f9;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    color: #475569;
+    flex-shrink: 0;
+}
+
+.option-btn.selected .option-label {
+    background-color: #4f46e5;
+    color: white;
+}
+
+.option-btn.correct .option-label {
+    background-color: #10b981;
+    color: white;
+}
+
+.option-btn.wrong .option-label {
+    background-color: #ef4444;
+    color: white;
+}
+
+/* Timer warning animation */
+@keyframes pulse-red {
+    0%, 100% {
+        background-color: #fee2e2;
+        color: #991b1b;
+        border-color: #ef4444;
+    }
+    50% {
+        background-color: #fecaca;
+        color: #dc2626;
+        border-color: #dc2626;
+    }
+}
+
+.timer-warning {
+    animation: pulse-red 1s infinite;
+}
+
+/* Calculator display */
+#calcDisplay {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.05em;
+    background-color: #1e293b;
+    color: #f1f5f9;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    text-align: right;
+    font-size: 1.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .palette-btn {
+        font-size: 0.75rem;
+    }
+    
+    .option-btn {
+        padding: 0.875rem;
+    }
+}
+
+/* Prevent text selection during exam */
+#examScreen {
+    user-select: none;
+}
+
+#examScreen input, 
+#examScreen textarea,
+#examScreen select {
+    user-select: auto;
+}
+
+/* Print styles for results */
+@media print {
+    #resultsScreen {
+        background: white;
+    }
+    
+    button {
+        display: none;
+    }
+}
+
+/* Adjust padding for better readability */
+#questionText {
+    padding: 1rem;
+    line-height: 1.6;
+    font-size: 1.125rem;
+    background-color: #f8fafc;
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.option-btn {
+    padding: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Progress bar enhancement */
+#progressBar {
+    transition: width 0.3s ease;
+}
+
+/* Modal improvements for 30 questions */
+.modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Stats display for larger question sets */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
